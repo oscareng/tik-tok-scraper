@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.App {
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+
+}
+.css-5g0doo { 
+  box-sizing: border-box; 
+  width: 100%; 
+  padding-inline: 12px; 
+  font-family: var(--tux-fontFamilyParagraph); 
+  font-size: var(--tux-fontSizeP3); 
+  font-weight: var(--tux-fontWeightRegular); 
+  color: var(--tux-colorTextPrimary); 
+  background-color: var(--tux-colorBGPrimary); 
+  border: 1px solid var(--tux-colorLineSecondary); 
+  border-radius: 2px; 
+  outline: none; 
+  height: 36px;
+  border : 1px solid #e0e0e0;
+} 
+.css-5g0doo:hover{
+  border : 1px solid #c9c3c3;
+  transition : 0.2s
+}
+.css-5g0doo:focus{
+  border : 1px solid #999999;
+}
+
+*,:before,:after { 
+  box-sizing: inherit; 
+  -webkit-font-smoothing: antialiased; 
+  word-break: break-word; 
+  word-wrap: break-word;
+} 
+
+
+.lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  scale: 0.5;
+}
+.lds-ripple div {
+  position: absolute;
+  border: 5px solid rgb(228, 72, 72);
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  4.9% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  5% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}
+
+
+.StepsNumber{
+  background-color: rgb(254, 44, 85);
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 50%;
+  margin-inline: 8px;
+}
+
+.StepsLabel{
+  font-size: 16px;
+}
+
+
+/* // Simple Scroll */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, .9);
+}
