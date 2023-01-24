@@ -91,89 +91,8 @@ app.get("/check/:username", async (req, res) => {
     res.send({
       message: "username DOES NOT exist in spreadsheet, FRESH ACCOUNT",
     });
-
-    /*
-        //create a new sheet with the username as name
-        await doc.addSheet({ title: username });
-        console.log(clc.blue('created new sheet with name  : ' + username))
-
-        //create columns (row headers)
-        let sheet = doc.sheetsByTitle[username];
-        await sheet.setHeaderRow(['videoId','username', 'videoName','videoLink',  'musicLink', 'downloadLink']);
-
-        console.log(clc.blue('added row headers to new sheet '))*/
   }
 });
-
-//AIRTABLE
-Airtable.configure({
-  endpointUrl: "https://api.airtable.com",
-  apiKey: "key320l6hCLmpsd4F",
-});
-
-const base = new Airtable({ apiKey: "key320l6hCLmpsd4F" }).base(
-  "appyEOmHmMzD6EEhJ"
-);
-//airtable table has 4 columns : Tiktok Username, Videos Download Link, N° of Videos, Date / Time
-//add dummy data to airtable
-function addDataToAirtable(
-  username,
-  link,
-  numberOfVideos,
-  lastDownloadedVideos
-) {
-  base("Table 1").create(
-    [
-      {
-        fields: {
-          "Tiktok Username": username,
-          "Videos Download Link": link,
-          "N° of Videos": numberOfVideos,
-          "Last Downloaded Videos ": lastDownloadedVideos,
-        },
-      },
-    ],
-    function (err, records) {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      records.forEach(function (record) {
-        console.log(record.getId());
-      });
-    }
-  );
-}
-
-//GET MUSIC IDS
-var videosList = [
-  "https://www.tiktok.com/@celestexoxo454/video/7158658192883322158",
-];
-//GET MUSIC IDS
-/*videosList.forEach(async (link) => {
-    await axios.get(`https://api.douyin.wtf/api?url=${link}`)
-        .then(resp => {
-            if (resp.data.status === "success") {
-                //write response to a json file ds.json
-                //  fs.writeFileSync('ds.json', JSON.stringify(resp.data));
-
-                var musicId = resp.data.video_music_id;
-                var musicTitle = resp.data.video_music_title;
-
-
-                if (musicTitle.includes('original sound')) {
-                    musicTitle = 'original-sound'
-                }
-                musicTitle = musicTitle.replace(/\s/g, '-');
-
-                // console.log(clc.blue('music id : ' + musicId + '  music title : ' + musicTitle))
-                console.log(clc.blue('link : ' + link + '  api url : ' + `https://api.douyin.wtf/api?url=${link}`))
-                console.log(clc.green('music url : ' + 'https://www.tiktok.com/music/' + musicTitle + '-' + musicId + ' ' + resp.data.video_music_id))
-            } else {
-                console.log(clc.red('something went wrong with this video : ' + `https://api.douyin.wtf/api?url=${link}`))
-            }
-        })
-})*/
 
 //SOCKET IO
 const http = require("http");
@@ -347,7 +266,7 @@ app.get("/scrape/:username", async (req, res) => {
       console.log("Puppeteer is running...");
       updateEmitter.emit(
         "scrapingUpdate",
-        "Bot is trying to emulate a real user on Titok to avoid detection, this might take up to one minute"
+        "Bot is trying to emulate a real user on Titok to avoid detection, this may take a minute"
       );
 
       console.log("using useragent: " + ua);
@@ -368,7 +287,7 @@ app.get("/scrape/:username", async (req, res) => {
         console.log(clc.green("Tiktok Homepage loaded"));
         updateEmitter.emit(
           "scrapingUpdate",
-          "Bot is on Titok's Homepage successfully undetected !"
+          "Bot is on Titok's Homepage successfully undetected!"
         );
       } else {
         console.log(
@@ -422,7 +341,7 @@ app.get("/scrape/:username", async (req, res) => {
         console.log(clc.green("Profile page loaded"));
         updateEmitter.emit(
           "scrapingUpdate",
-          "Bot is on Titok's Profile page successfully undetected !"
+          "Bot is on Titok's Profile page successfully undetected!"
         );
       } else {
         console.log(
@@ -453,7 +372,7 @@ app.get("/scrape/:username", async (req, res) => {
       //auto scroll
       updateEmitter.emit(
         "scrapingUpdate",
-        "Bot started scrolling and collecting the videos !"
+        "Bot started scrolling and collecting videos!"
       );
 
       await autoScroll(page);
@@ -466,7 +385,7 @@ app.get("/scrape/:username", async (req, res) => {
       console.log(clc.green("DONE ! Number of videos: " + count));
       updateEmitter.emit(
         "scrapingUpdate",
-        "Bot finished succesfully and is now checking if this Profile has been scraped before !"
+        "Bot finished and is now checking if this Profile has been scraped before!"
       );
 
       //get href for a elements, each is inside a div with className tiktok-yz6ijl-DivWrapper e1cg0wnj1 using cheerio
@@ -562,7 +481,7 @@ app.post("/download", async (req, res) => {
 
   console.log("folder name: " + folderName);
 
-  updateEmitter.emit("downloadingUpdate", "Download started on the server !");
+  updateEmitter.emit("downloadingUpdate", "Download started on the server!");
 
   //yt-dlp options to get extra meta data for the tiktok video audio
 
@@ -682,7 +601,7 @@ app.post("/save", async (req, res) => {
         });
         return;
       }
-      console.log(clc.green("we saved to airtable !"));
+      console.log(clc.green("Saved to airtable!"));
       var recordsDetails = [];
       records.forEach(function (record) {
         recordsDetails.push({
@@ -905,7 +824,7 @@ app.post("/music", (req, res) => {
         console.log(clc.red("OUPS DID NOT FIND HTML"));
         updateEmitter.emit(
           "soundLinksUpdate",
-          "OUPS ! Bot is having trouble with Video " + (i + 1)
+          "Bot is having trouble with Video " + (i + 1)
         );
         failCounter = failCounter + 1;
         if (failCounter >= 5) {
@@ -946,9 +865,7 @@ app.post("/music", (req, res) => {
         console.log(clc.red("COULD NOT FIND HREF "));
         updateEmitter.emit(
           "soundLinksUpdate",
-          "OUPS ! Bot could not find sound link for " +
-            (i + 1) +
-            "please start again"
+          "Bot could not find sound link for " + (i + 1) + "please start again"
         );
       }
       //get content of this span element #app > div.tiktok-ywuvyb-DivBodyContainer.e1irlpdw0 > div.tiktok-2vzllv-DivMainContainer.elnrzms0 > div.tiktok-19j62s8-DivVideoDetailContainer.ege8lhx0 > div.tiktok-12kupwv-DivContentContainer.ege8lhx6 > div > div.tiktok-1gyd0ay-DivAuthorContainer.ege8lhx8 > div > a.tiktok-1b6v967-StyledLink.e17fzhrb3 > span.tiktok-lh6ok5-SpanOtherInfos.e17fzhrb2 > span:nth-child(2)
@@ -1067,11 +984,7 @@ app.post("/spreadsheet", async (req, res) => {
       "#gid=" +
       sheet._rawProperties.sheetId;
 
-    console.log(
-      clc.green(
-        "username exists in spreadsheet ! WE SCRAPED THIS ACCOUNT IN THE PAST"
-      )
-    );
+    console.log(clc.green("Account already scraped"));
 
     //put each 50 elements of music data to musicDataSplitted
 
