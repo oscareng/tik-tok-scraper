@@ -13,11 +13,17 @@ import axios from "axios";
 import { FaFileCsv } from "react-icons/fa";
 import { FaLink } from "react-icons/fa";
 
-var SERVER_HOST = "";
+var SERVER_HOST = "https://api.allstarproduction.io";
 
 const socket = io(SERVER_HOST);
 
 function App() {
+  //http://137.184.219.36
+  //http://localhost:8080
+  //https://api2.ardeenshop.com/
+  //https://api.chicmodels.io
+  //https://api.allstarproduction.io/
+
   const JoinRoom = (roomCode) => {
     socket.emit("join_room", { roomCode });
   };
@@ -340,6 +346,66 @@ function App() {
   ] = useState(false);
   console.log(airtableScrapingHistoryVideo);
 
+  /* const GetPastVideosOfProfile = async (username) => {
+    
+    setLoadingCheckingProfileScrapeHistory(true);
+    setAirtableScrapingHistoryVideo(null);
+    setAirtableScrapingHistoryVideoIndex(null);
+    setAlreadyScrapedVideosRemoved(false);
+
+    //produce apiurl that gets fields that has 'Tiktok Username' = username
+    //https://api.airtable.com/v0/appXZ4XZ4XZ4XZ4XZ/Table%201?filterByFormula=%7BTiktok%20Username%7D%20%3D%20%27' + username + '%27
+    var apiurl = "https://api.airtable.com/v0/appyEOmHmMzD6EEhJ/Table%201?filterByFormula=%7BTiktok+Username%7D%3D%22tunisian_series3%22";
+    //replace tunisia series with yo 
+    apiurl = apiurl.replace('tunisian_series3', username);
+
+    fetch(apiurl, {
+      headers: {
+        'Authorization': 'Bearer key320l6hCLmpsd4F'
+
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.records.length > 0) {
+          //if res.records[0] has a \n in the end, remove it 
+          //sort res records by created time from most recent to oldest
+          res.records.sort((a, b) => {
+            return new Date(b.createdTime) - new Date(a.createdTime);
+          });
+
+          console.log(res.records)
+          //if res.records[0].fields['Last Downloaded Videos '] has a \n in the end, remove it
+          if (res.records[0].fields['Last Downloaded Videos '].slice(-1) === '\n') {
+            res.records[0].fields['Last Downloaded Videos '] = res.records[0].fields['Last Downloaded Videos '].slice(0, -1);
+          }
+          //remove any \ 
+          res.records[0].fields['Last Downloaded Videos '] = res.records[0].fields['Last Downloaded Videos '].replace(/\\/g, '');
+          //check if it exists in accountVideos 
+          //if it exists, setAirtableScrapingHistoryVideo to it 
+          var pastVideo = res.records[0].fields['Last Downloaded Videos '];
+          console.log('pastVideo : ' + pastVideo)
+          var index = accountVideos?.findIndex(video => video == pastVideo);
+
+          if (index > -1) {
+            setAirtableScrapingHistoryVideo(pastVideo);
+            setAirtableScrapingHistoryVideoIndex(index);
+            console.log('ONE OF THE ACCOUNT VIDEOS HAS BEEN SCRAPED IN THE PAST')
+          } else {
+            console.log('this profile has not been scraped before')
+          }
+
+          console.log(res.records[0].fields['Last Downloaded Videos ']);
+        }
+        setLoadingCheckingProfileScrapeHistory(false);
+      })
+      .catch(error => {
+        console.log(error)
+
+        setLoadingCheckingProfileScrapeHistory(false);
+      })
+  }*/
+
   const GetPastVideosOfProfile = async (username) => {
     setLoadingCheckingProfileScrapeHistory(true);
     setAirtableScrapingHistoryVideo(null);
@@ -500,7 +566,7 @@ function App() {
           style={{ textAlign: "left" }}
           className="text-3xl mb-4 font-semibold"
         >
-          TikTok Account Videos Downloader
+          TikTok Video Scraper
         </h1>
         <h3
           style={{
@@ -1118,13 +1184,6 @@ function App() {
             }}
           >
             <div
-              className="StepsNumber"
-              style={{ backgroundColor: videosSavedToAirtable && "limegreen" }}
-            >
-              5
-            </div>
-            <p className="StepsLabel">Sending Videos to Airtable</p>
-            <div
               className="lds-ripple"
               style={{ opacity: loadingSendingToAirtable ? "1" : "0" }}
             >
@@ -1140,43 +1199,6 @@ function App() {
               marginLeft: "20px",
             }}
           >
-            {csvDownloadLink && (
-              <button
-                type="button"
-                style={{
-                  opacity:
-                    (loadingAccountVideos ||
-                      loadingDownloadVideos ||
-                      loadingSendingToAirtable ||
-                      loadingGenerateCsv ||
-                      airtableScrapingHistoryVideo) &&
-                    "0.5",
-                  pointerEvents:
-                    (loadingAccountVideos ||
-                      loadingDownloadVideos ||
-                      loadingSendingToAirtable ||
-                      loadingGenerateCsv ||
-                      airtableScrapingHistoryVideo) &&
-                    "none",
-                }}
-                onClick={() => {
-                  SaveDataToAirtable(
-                    username,
-                    downloadLink,
-                    accountVideos[0],
-                    csvDownloadLink
-                  );
-                }}
-                className={clsx(
-                  "flex mb-4 items-center px-7 py-4 bg-rose-500 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-rose-600 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0  focus:shadow-lg transition duration-150 ease-in-out ",
-                  (videosSavedToAirtable || airtableScrapingHistoryVideo) &&
-                    "bg-green-500 hover:bg-green-600"
-                )}
-              >
-                <div> Send to Airtable {videosSavedToAirtable && "again"} </div>{" "}
-                <SiAirtable style={{ marginLeft: "10px" }} />
-              </button>
-            )}
             {csvDownloadLink && airtableScrapingHistoryVideo && (
               <p className="text-sm  text-left text-pink-500 my-4">
                 Profile is already on Airtable !
