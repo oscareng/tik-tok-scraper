@@ -14,5 +14,3 @@ Information on how to retrieve a google sheet ID: [Google Sheets Documentation](
 cd into frontend and run command to begin
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-##Enjoy scraping videos!
